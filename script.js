@@ -81,11 +81,11 @@ function drawWinningLine(pattern) {
     }
     // Diagonal from top-left to bottom-right
     else if (pattern.toString() === [0,4,8].toString()) {
-        line.classList.add('diagonal-right');
+        line.classList.add('diagonal-left');
     }
     // Diagonal from top-right to bottom-left
     else if (pattern.toString() === [2,4,6].toString()) {
-        line.classList.add('diagonal-left');
+        line.classList.add('diagonal-right');
     }
     
     boardElement.appendChild(line);
