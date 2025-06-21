@@ -27,9 +27,11 @@ function handleCellClick(idx) {
     if (!gameActive || board[idx]) return;
     board[idx] = currentPlayer;
     renderBoard();
-    if (checkWin()) {
+    const winningPattern = checkWin();
+    if (winningPattern) {
         statusElement.textContent = `Player ${currentPlayer} wins!`;
         gameActive = false;
+        drawWinningLine(winningPattern);
     } else if (board.every(cell => cell)) {
         statusElement.textContent = "It's a draw!";
         gameActive = false;
@@ -40,10 +42,53 @@ function handleCellClick(idx) {
 }
 
 function checkWin() {
-    return winPatterns.some(pattern => {
+    for (let pattern of winPatterns) {
         const [a, b, c] = pattern;
-        return board[a] && board[a] === board[b] && board[a] === board[c];
-    });
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return pattern;
+        }
+    }
+    return null;
+}
+
+function drawWinningLine(pattern) {
+    // Remove any existing winning line
+    const existingLine = document.querySelector('.winning-line');
+    if (existingLine) {
+        existingLine.remove();
+    }
+
+    // Create line element
+    const line = document.createElement('div');
+    line.className = 'winning-line';
+    
+    // Determine line type and position
+    const [a, b, c] = pattern;
+    
+    // Check if it's a row (horizontal line)
+    if (pattern.toString() === [0,1,2].toString() || 
+        pattern.toString() === [3,4,5].toString() || 
+        pattern.toString() === [6,7,8].toString()) {
+        line.classList.add('horizontal');
+        line.style.top = `${Math.floor(a/3) * 90 + 40}px`;
+    }
+    // Check if it's a column (vertical line)
+    else if (pattern.toString() === [0,3,6].toString() || 
+             pattern.toString() === [1,4,7].toString() || 
+             pattern.toString() === [2,5,8].toString()) {
+        line.classList.add('vertical');
+        line.style.left = `${(a % 3) * 90 + 40}px`;
+    }
+    // Diagonal from top-left to bottom-right
+    else if (pattern.toString() === [0,4,8].toString()) {
+        line.classList.add('diagonal-right');
+    }
+    // Diagonal from top-right to bottom-left
+    else if (pattern.toString() === [2,4,6].toString()) {
+        line.classList.add('diagonal-left');
+    }
+    
+    boardElement.appendChild(line);
 }
 
 function resetGame() {
@@ -51,6 +96,13 @@ function resetGame() {
     currentPlayer = 'X';
     gameActive = true;
     statusElement.textContent = `Player ${currentPlayer}'s turn`;
+    
+    // Remove winning line
+    const existingLine = document.querySelector('.winning-line');
+    if (existingLine) {
+        existingLine.remove();
+    }
+    
     renderBoard();
 }
 
