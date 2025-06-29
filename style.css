@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+}
+
+#game-board {
+    margin: 20px 0;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background: #fafafa;
+    border: 2px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cell:hover {
+    background: #e0e0e0;
+}
+
+#game-status {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    min-height: 1.5em;
+}
+
+#restart-btn {
+    padding: 8px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
