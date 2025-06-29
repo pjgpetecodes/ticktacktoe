@@ -31,6 +31,49 @@
             font-size: 3em;
             cursor: pointer;
             user-select: none;
+            position: relative;
+        }
+        .winning-horizontal::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: red;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        .winning-vertical::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background-color: red;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        .winning-diagonal-right::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom right, transparent 48%, red 48%, red 52%, transparent 52%);
+            z-index: 1;
+        }
+        .winning-diagonal-left::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom left, transparent 48%, red 48%, red 52%, transparent 52%);
+            z-index: 1;
         }
         #status {
             margin: 20px 0 10px 0;

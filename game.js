@@ -33,9 +33,11 @@ function handleCellClick(e) {
     if (board[row][col] !== '') return;
     board[row][col] = currentPlayer;
     renderBoard();
-    if (checkWin(currentPlayer)) {
+    const winningCells = checkWin(currentPlayer);
+    if (winningCells) {
         statusElement.textContent = `Player ${currentPlayer} wins!`;
         gameActive = false;
+        highlightWinningCells(winningCells);
     } else if (isDraw()) {
         statusElement.textContent = "It's a draw!";
         gameActive = false;
@@ -46,18 +48,60 @@ function handleCellClick(e) {
 }
 
 function checkWin(player) {
-    // Rows, columns, diagonals
+    // Check rows
     for (let i = 0; i < 3; i++) {
-        if (board[i][0] === player && board[i][1] === player && board[i][2] === player) return true;
-        if (board[0][i] === player && board[1][i] === player && board[2][i] === player) return true;
+        if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
+            return [[i, 0], [i, 1], [i, 2]];
+        }
     }
-    if (board[0][0] === player && board[1][1] === player && board[2][2] === player) return true;
-    if (board[0][2] === player && board[1][1] === player && board[2][0] === player) return true;
-    return false;
+    // Check columns
+    for (let i = 0; i < 3; i++) {
+        if (board[0][i] === player && board[1][i] === player && board[2][i] === player) {
+            return [[0, i], [1, i], [2, i]];
+        }
+    }
+    // Check diagonals
+    if (board[0][0] === player && board[1][1] === player && board[2][2] === player) {
+        return [[0, 0], [1, 1], [2, 2]];
+    }
+    if (board[0][2] === player && board[1][1] === player && board[2][0] === player) {
+        return [[0, 2], [1, 1], [2, 0]];
+    }
+    return null;
 }
 
 function isDraw() {
     return board.flat().every(cell => cell !== '');
+}
+
+function highlightWinningCells(winningCells) {
+    // Determine the type of win
+    const [first, second, third] = winningCells;
+    let lineType = '';
+    
+    // Check if it's a horizontal win (same row)
+    if (first[0] === second[0] && second[0] === third[0]) {
+        lineType = 'winning-horizontal';
+    }
+    // Check if it's a vertical win (same column)
+    else if (first[1] === second[1] && second[1] === third[1]) {
+        lineType = 'winning-vertical';
+    }
+    // Check if it's main diagonal (top-left to bottom-right)
+    else if (first[0] === 0 && first[1] === 0) {
+        lineType = 'winning-diagonal-right';
+    }
+    // Check if it's anti-diagonal (top-right to bottom-left)
+    else if (first[0] === 0 && first[1] === 2) {
+        lineType = 'winning-diagonal-left';
+    }
+    
+    // Apply the line styling to all winning cells
+    winningCells.forEach(([row, col]) => {
+        const cellIndex = row * 3 + col;
+        const cell = boardElement.children[cellIndex];
+        cell.classList.add(lineType);
+    });
 }
 
 function resetGame() {
