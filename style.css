@@ -27,6 +27,42 @@ body {
     background: #e0e0e0;
 }
 
+.winning-cell {
+    background: #4CAF50 !important;
+    position: relative;
+}
+
+.winning-cell::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 4px;
+    background: #FF5722;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+/* Adjust line direction for diagonal wins */
+.winning-cell.diagonal-main::after {
+    width: 4px;
+    height: 120%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.winning-cell.diagonal-anti::after {
+    width: 4px;
+    height: 120%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.winning-cell.vertical::after {
+    width: 4px;
+    height: 120%;
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
 #game-status {
     margin-bottom: 10px;
     font-size: 1.2rem;

@@ -28,9 +28,11 @@ function handleCellClick(e) {
     if (!gameActive || board[idx]) return;
     board[idx] = currentPlayer;
     renderBoard();
-    if (checkWinner()) {
+    const winningPattern = checkWinner();
+    if (winningPattern) {
         gameStatus.textContent = `${currentPlayer} wins!`;
         gameActive = false;
+        highlightWinningCells(winningPattern);
     } else if (board.every(cell => cell)) {
         gameStatus.textContent = "It's a draw!";
         gameActive = false;
@@ -46,9 +48,33 @@ function checkWinner() {
         [0,3,6], [1,4,7], [2,5,8], // cols
         [0,4,8], [2,4,6]           // diags
     ];
-    return winPatterns.some(pattern =>
-        pattern.every(idx => board[idx] === currentPlayer)
-    );
+    for (const pattern of winPatterns) {
+        if (pattern.every(idx => board[idx] === currentPlayer)) {
+            return pattern;
+        }
+    }
+    return null;
+}
+
+function highlightWinningCells(winningPattern) {
+    // Determine the type of win to apply appropriate line styling
+    let lineType = '';
+    if (winningPattern.toString() === '0,4,8') {
+        lineType = 'diagonal-main';
+    } else if (winningPattern.toString() === '2,4,6') {
+        lineType = 'diagonal-anti';
+    } else if (winningPattern[0] % 3 === winningPattern[1] % 3) {
+        lineType = 'vertical';
+    }
+    // For horizontal wins, use default horizontal line (no additional class needed)
+    
+    winningPattern.forEach(idx => {
+        const cell = gameBoard.children[idx];
+        cell.classList.add('winning-cell');
+        if (lineType) {
+            cell.classList.add(lineType);
+        }
+    });
 }
 
 function restartGame() {
